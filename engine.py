@@ -9,8 +9,8 @@ for s in range(128):
  f=s&7;r=s>>4;cc=1 if f in(3,4) else 0;mf=min(f,7-f)
  for k in(0,1):
   q=r if k==0 else 7-r;w=mf+min(q,7-q)
-  mg=[0,12*q+8*cc,8*w-24,6*w-12,4*w-10+(20 if q==6 else 0),4*w-10,30-10*q-8*mf]
-  eg=[0,28*q+10*cc,10*w-20,8*w-16,3*w-6+(15 if q==6 else 0),6*w-12,10*w-20]
+  mg=[0,6*q+4*cc,8*w-24,6*w-12,4*w-10+(20 if q==6 else 0),4*w-10,30-10*q-8*mf]
+  eg=[0,14*q+5*cc,10*w-20,8*w-16,3*w-6+(15 if q==6 else 0),6*w-12,10*w-20]
   for t in range(1,7):
    g=1 if k==0 else -1
    MG[(t if k==0 else -t)+6][s]=g*(V[t]+mg[t]);EG[(t if k==0 else -t)+6][s]=g*(V[t]+eg[t])
@@ -23,7 +23,7 @@ class Ab(Exception):pass
 def pf(fn):
  global Sd,Ca,Ep,Hf,Wk,Bk,Sg,Se,Np,Wb,Bb,Hs,Ph,Un
  p=fn.split();Sg=Se=Np=Wb=Bb=0;Hs=0;Pf[0]=[0]*8;Pf[1]=[0]*8
- for i in range(128):B[i]=0
+ B[:]=[0]*128
  for i,rw in enumerate(p[0].split("/")):
   f=0
   for ch in rw:
@@ -126,11 +126,11 @@ def gn(cp=0):
      t2+=dd
  if not cp:
   if u>0 and B[4]==6:
-   if Ca&1 and B[5]==0 and B[6]==0 and B[7]==4 and sum(ak(x,0) for x in(4,5,6))==0:m.append(en(4,6,0,8))
-   if Ca&2 and B[3]==0 and B[2]==0 and B[1]==0 and B[0]==4 and sum(ak(x,0) for x in(4,3,2))==0:m.append(en(4,2,0,16))
+   if Ca&1 and B[5]==0 and B[6]==0 and B[7]==4 and not any(ak(x,0)for x in(4,5,6)):m.append(en(4,6,0,8))
+   if Ca&2 and B[3]==0 and B[2]==0 and B[1]==0 and B[0]==4 and not any(ak(x,0)for x in(4,3,2)):m.append(en(4,2,0,16))
   if u<0 and B[116]==-6:
-   if Ca&4 and B[117]==0 and B[118]==0 and B[119]==-4 and sum(ak(x,1) for x in(116,117,118))==0:m.append(en(116,118,0,8))
-   if Ca&8 and B[115]==0 and B[114]==0 and B[113]==0 and B[112]==-4 and sum(ak(x,1) for x in(116,115,114))==0:m.append(en(116,114,0,16))
+   if Ca&4 and B[117]==0 and B[118]==0 and B[119]==-4 and not any(ak(x,1)for x in(116,117,118)):m.append(en(116,118,0,8))
+   if Ca&8 and B[115]==0 and B[114]==0 and B[113]==0 and B[112]==-4 and not any(ak(x,1)for x in(116,115,114)):m.append(en(116,114,0,16))
  return m
 def mk(m):
  global Sd,Ca,Ep,Hf,Wk,Bk,Sg,Se,Np,Wb,Bb,Hs
@@ -191,9 +191,9 @@ def um():
  if cp and abs(cp)==1:Pf[0 if cp>0 else 1][cs&7]+=1
  Ca,Ep,Hf,Hs=oc,oe,oh,oH;Sg-=dG;Se-=dE;Np-=dN;Wb-=dW;Bb-=dB
 def ev():
- p=Np if Np<6400 else 6400
+ p=min(Np,6400)
  e=(Sg*p+Se*(6400-p))//6400+(25 if Wb>=2 else 0)-(25 if Bb>=2 else 0)
- for k in(0,1):e+=sum((c-1)*(-10 if k==0 else 10) for c in Pf[k] if c>1)
+ for k in(0,1):e+=sum(c-1 for c in Pf[k] if c>1)*(10 if k else -10)
  return e if Sd>0 else -e
 def od(ms,tm,pl):
  def sc(m):
@@ -270,7 +270,9 @@ def nm(de,al,be,pl):
  if not Nl and not ic and de>=3 and Np>0:
   _s,_e,_h,_H=Sd,Ep,Hf,Hs;Sd=-Sd;Ep=-1;Hf+=1;Hs^=Zs
   if _e>=0:Hs^=Ze[_e&7]
-  Ph.append(Hs);Nl=1;R=2+(1 if de>=6 else 0);s=-nm(de-1-R,-be,-be+1,pl+1);Nl=0;Sd,Ep,Hf,Hs=_s,_e,_h,_H;Ph.pop()
+  Ph.append(Hs);Nl=1;R=2+(1 if de>=6 else 0)
+  try:s=-nm(de-1-R,-be,-be+1,pl+1)
+  finally:Nl=0;Sd,Ep,Hf,Hs=_s,_e,_h,_H;Ph.pop()
   if s>=be:return be
  bs=-IN;bm=0;lg=0;oa=al
  ms=od(gn(),tm,pl)
@@ -310,12 +312,12 @@ def sr(pl):
  global Bd,Nd
  ms=lm()
  if len(ms)==1:return ms[0]
- Bd=50000 if pl<60 else(25000 if pl<120 else 12000)
+ Bd=75000 if pl<60 else(50000 if pl<120 else 25000)
  if len(Tt)>300000:Tt.clear()
  bs=ms[0];sc={m:0 for m in ms};Nd=0
  for d in range(1,11):
   try:
-   ms.sort(key=lambda m:sc[m],reverse=True);al=-IN;cb=bs;cs={}
+   ms.sort(key=sc.get,reverse=True);al=-IN;cb=bs;cs={}
    for i,m in enumerate(ms):
     mk(m)
     if i==0:s=-nm(d-1,-IN,-al,1)
@@ -335,7 +337,7 @@ def po(pa,bd):
  q=U.Request(U_+pa,data=J.dumps(bd).encode(),headers={"content-type":"application/json"})
  try:
   with U.urlopen(q) as r:return J.load(r)
- except W.HTTPError as e:raise RuntimeError(pa)
+ except W.HTTPError:raise RuntimeError(pa)
 while True:
  g=po("/game",{})
  if g["status"]=="done":break
@@ -347,4 +349,4 @@ while True:
   except RuntimeError:
    g=po("/game",{})
    if g["status"]=="your_move":g=po("/move",{"game":g["game"],"move":g["legal_moves"][0]})
-print("done",g.get('wins'),g.get('draws'),g.get('losses'),file=sys.stderr)
+print("done",g['wins'],g['draws'],g['losses'],file=sys.stderr)
